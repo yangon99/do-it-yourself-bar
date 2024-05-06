@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(DoItYourselfBar)
 
+set(QT_MAJOR_VERSION 6)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
@@ -16,39 +17,41 @@ endif()
 if(NOT KDE_INSTALL_QMLDIR)
     file(STRINGS /etc/os-release distro REGEX "^NAME=.*$")
     if(distro MATCHES ".*Ubuntu.*")
-        set(KDE_INSTALL_QMLDIR "/usr/lib/x86_64-linux-gnu/qt5/qml")
+        set(KDE_INSTALL_QMLDIR "/usr/lib/x86_64-linux-gnu/qt6/qml")
     endif()
 
     file(STRINGS /etc/os-release distro REGEX "^NAME=.*$")
     if(distro MATCHES ".*openSUSE.*")
-        set(KDE_INSTALL_QMLDIR "/usr/lib64/qt5/qml")
+        set(KDE_INSTALL_QMLDIR "/usr/lib64/qt6/qml")
     endif()
 
     file(STRINGS /etc/os-release distro REGEX "^NAME=.*$")
     if(distro MATCHES ".*Arch|Manjaro|Solus.*")
-        set(KDE_INSTALL_QMLDIR "/usr/lib/qt/qml")
+        set(KDE_INSTALL_QMLDIR "/usr/lib/qt6/qml")
     endif()
+endif()
+
+if(NOT ICON_INSTALL_DIR)
+    set(ICON_INSTALL_DIR "/usr/share/icons")
 endif()
 
 find_package(ECM REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-include(KDEInstallDirs)
+include(KDEInstallDirs6)
 include(KDECompilerSettings)
 include(KDECMakeSettings)
 include(ECMInstallIcons)
 
-set(REQUIRED_QT_VERSION 5.9.5)
-set(KF5_MIN_VERSION 5.44.0)
+set(KF6_MIN_VERSION 6.0.0)
 
-find_package(Qt5 ${REQUIRED_QT_VERSION}
+find_package(Qt6 REQUIRED COMPONENTS DBus
              CONFIG REQUIRED
-             Qml
-             DBus)
+             Qml)
 
-find_package(KF5 ${KF5_MIN_VERSION}
-             REQUIRED COMPONENTS
-             Plasma)
+find_package(KF6 ${KF6_MIN_VERSION}
+             REQUIRED COMPONENTS)
+find_package(Plasma)
 
 plasma_install_package(package org.kde.plasma.doityourselfbar)
 
@@ -62,9 +65,8 @@ set(doityourselfbar_SRCS
 add_library(doityourselfbar SHARED ${doityourselfbar_SRCS})
 
 target_link_libraries(doityourselfbar
-                      Qt5::Qml
-                      Qt5::DBus
-                      KF5::Plasma)
+                      Qt6::Qml
+                      Qt6::DBus)
 
 install(TARGETS doityourselfbar DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/doityourselfbar)
 install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/plasma/doityourselfbar)

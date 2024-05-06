@@ -1,6 +1,6 @@
-import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
 
 import "../common" as UICommon
 
@@ -25,8 +25,8 @@ Item {
 
             SpinBox {
                 id: dbusInstanceIdSpinBox
-                minimumValue: 0
-                maximumValue: 999
+                from: 0
+                to: 999
             }
 
             HintIcon {

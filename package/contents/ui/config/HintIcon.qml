@@ -1,12 +1,12 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.3
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.kirigami as Kirigami
 
 import "../common" as UICommon
 
-PlasmaCore.IconItem {
+Kirigami.Icon {
     roundToIconSize: false
     Layout.maximumWidth: 20
     Layout.maximumHeight: 20
@@ -21,9 +21,10 @@ PlasmaCore.IconItem {
         hoverEnabled: true
     }
 
-    UICommon.TextTooltip {
-        target: parent
-        visible: mouseArea.containsMouse
-        content: tooltipText
-    }
+    Label{}
+    // UICommon.TextTooltip {
+    //     target: parent
+    //     visible: mouseArea.containsMouse
+    //     content: tooltipText
+    // }
 }

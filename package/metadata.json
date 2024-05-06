@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "wsdfhjxc"
+            },
+            {
+                "Name": "yangon99"
+            }
+        ],
+        "Description": "Create simple text-based widgets",
+        "Icon": "doityourselfbar",
+        "Id": "org.kde.plasma.doityourselfbar",
+        "Name": "Do It Yourself Bar",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "1.2.1"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

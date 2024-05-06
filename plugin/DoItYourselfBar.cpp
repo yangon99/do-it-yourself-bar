@@ -7,13 +7,15 @@
 
 #include "BlockInfo.hpp"
 
-DoItYourselfBar::DoItYourselfBar(QObject* parent) :
-        QObject(parent),
-        childPid(0),
-        dbusService(parent),
-        dbusSuccess(false),
-        dbusInstanceId(0),
-        cfg_DBusInstanceId(0) {
+#include <QDebug>
+
+DoItYourselfBar::DoItYourselfBar(QObject *parent) : QObject(parent),
+                                                    childPid(0),
+                                                    dbusService(parent),
+                                                    dbusSuccess(false),
+                                                    dbusInstanceId(0),
+                                                    cfg_DBusInstanceId(0)
+{
 
     QObject::connect(&dbusService, &DBusService::dataPassed,
                      this, &DoItYourselfBar::handlePassedData);
@@ -29,11 +31,13 @@ DoItYourselfBar::DoItYourselfBar(QObject* parent) :
     });
 }
 
-DoItYourselfBar::~DoItYourselfBar() {
+DoItYourselfBar::~DoItYourselfBar()
+{
     killChild();
 }
 
-void DoItYourselfBar::runStartupScript() {
+void DoItYourselfBar::runStartupScript()
+{
     killChild();
 
     if (!cfg_StartupScriptPath.isEmpty() && dbusSuccess) {
@@ -49,13 +53,15 @@ void DoItYourselfBar::runStartupScript() {
     }
 }
 
-void DoItYourselfBar::runCommand(QString command) {
+void DoItYourselfBar::runCommand(QString command)
+{
     if (!command.isEmpty()) {
         system(QString("(" + command + ") &").toStdString().c_str());
     }
 }
 
-void DoItYourselfBar::killChild() {
+void DoItYourselfBar::killChild()
+{
     if (childPid > 0) {
         kill(childPid, SIGTERM);
         wait(NULL);
@@ -63,7 +69,10 @@ void DoItYourselfBar::killChild() {
     }
 }
 
-void DoItYourselfBar::registerDBusService() {
+void DoItYourselfBar::registerDBusService()
+{
+    qDebug() << "Starting registerDBusService method. newid:" << QString::number(dbusInstanceId);
+
     auto sessionBus = QDBusConnection::sessionBus();
     sessionBus.registerService(SERVICE_NAME);
 
@@ -78,13 +87,16 @@ void DoItYourselfBar::registerDBusService() {
         QString path = "/id_" + QString::number(cfg_DBusInstanceId);
         if (sessionBus.registerObject(path, QString(SERVICE_NAME),
                                       &dbusService, QDBusConnection::ExportAllSlots)) {
-            dbusSuccess = true;
+            dbusSuccess    = true;
             dbusInstanceId = cfg_DBusInstanceId;
         }
     }
+
+    qDebug() << "Finished registerDBusService method";
 }
 
-void DoItYourselfBar::handlePassedData(QString data) {
+void DoItYourselfBar::handlePassedData(QString data)
+{
     QVariantList blockInfoList;
 
     BlockInfo blockInfo;
@@ -106,9 +118,9 @@ void DoItYourselfBar::handlePassedData(QString data) {
             separatorCount++;
 
             if (separatorCount % 5 == 0) {
-                blockInfo.style = blockInfo.style.trimmed();
-                blockInfo.labelText = blockInfo.labelText.trimmed();
-                blockInfo.tooltipText = blockInfo.tooltipText.trimmed();
+                blockInfo.style                = blockInfo.style.trimmed();
+                blockInfo.labelText            = blockInfo.labelText.trimmed();
+                blockInfo.tooltipText          = blockInfo.tooltipText.trimmed();
                 blockInfo.commandToExecOnClick = blockInfo.commandToExecOnClick.trimmed();
 
                 blockInfoList << blockInfo.toQVariantMap();
